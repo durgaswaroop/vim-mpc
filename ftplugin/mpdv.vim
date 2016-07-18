@@ -1,4 +1,4 @@
-function! mpc#GetMPCStatusline()
+function! GetMPCStatusline()
 	let cmd = "mpc status"
 	let result = split(system(cmd), '\n')
 	let status = len(result) == 3 ? result[2] : result[0]
