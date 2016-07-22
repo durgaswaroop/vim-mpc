@@ -4,43 +4,39 @@ function! mpc#GetPlaylist()
 	let maxLengths = {'position':[],'artist':[],'title':[]}
 
 	for item in results
-		let song = split(item,"@")
-		if(len(song) == 3)
-			let [position, artist,title] = song
-		elseif(len(song) == 2)
-			let [position,title] = song
-		else
-			echom "Bad Format of the song"
-		endif
-		call add(maxLengths['position'], len(position))
-		call add(maxLengths['artist'],   len(artist))
-		call add(maxLengths['title'],    len(title))
+		call add(playlist, mpc#EncodeSong(item))
 	endfor
+
+	for track in playlist
+		call add(maxLengths['position'], len(track.position))
+		if(len(track) == 3)
+			call add(maxLengths['artist'],   len(track.artist))
+			call add(maxLengths['title'],    len(track.title))
+		elseif(len(track) == 2)
+			call add(maxLengths['title'],    len(track.title))
+		endif
+	endfor
+
 	call sort(maxLengths.position,"LargestNumber")
 	call sort(maxLengths.artist,"LargestNumber")
 	call sort(maxLengths.title,"LargestNumber")
 
-	for item in results
-		let song = split(item, " @")
-		if(len(song) == 3)
-			let [position, artist,title] = song
-		elseif(len(song) == 2)
-			let [position,title] = song
+	for track in playlist
+		if(maxLengths.position[-1] + 1 > len(track.position))
+			let track.position = repeat(' ',
+						\ maxLengths.position[-1] - len(track.position))
+						\ . track.position
 		endif
-
-		if(maxLengths.position[-1] + 1 > len(position))
-			let position = repeat(' ',
-						\ maxLengths.position[-1] - len(position))
-						\ . position
+		let track.position.= ' '
+		echom track.position
+		if(len(track) == 3)
+			let track.artist  .= repeat(' ', maxLengths['artist'][-1] + 2 - len(artist))
+			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(title))
+		elseif(len(track) == 2)
+			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(title))
 		endif
-		let position.= ' '
-		let artist  .= repeat(' ', maxLengths['artist'][-1] + 2 - len(artist))
-		let title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(title))
-
-		call add(playlist,
-					\ {'position': position, 'artist': artist,
-					\  'title': title})
 	endfor
+
 	return playlist
 endfunction
 
@@ -68,4 +64,27 @@ function! mpc#PlaySong(num)
 	let message = '[mpc] NOW PLAYING: ' . results[0]
 	" set statusline+=%{results[0]}
 	echomsg message
+endfunction
+
+function! mpc#EncodeSong(item)
+	let item = split(a:item, " @")
+	if(len(item) == 3)
+		let song = {'position': item[0],
+					\		'artist' : '@ar' . item[1]. 'ar@',
+					\		'title': '@ti' . item[2] . 'ti@' }
+		" echom song.artist
+	elseif(len(item) == 2)
+		let song = {'position': item[0],
+					\		'title': '@ti' . item[1] . 'ti@' }
+		" echom song.title
+	endif
+	return song
+endfunction
+
+function! mpc#DecodeSong(item)
+	let line_items = split(substitute(a:item, ' \{2,}', ' ','g'), ' @')
+	let song = {'position': line_items[0],
+				\		'artist' : line_items[1][2:-4],
+				\		'title' : line_items[2][2:-4]}
+	return song
 endfunction
