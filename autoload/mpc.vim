@@ -1,12 +1,12 @@
 function! mpc#GetPlaylist()
-	let cmd = 'mpc --format "%position% [- @%artist%] [[- @%title%]|[- @%file%]]" playlist'
+	let cmd = 'mpc --format "%position% [ @%artist%] [[ @%title%]|[ @%file%]]" playlist'
+	" let cmd = 'mpc --format "%position% [- @%artist%] [[- @%title%]|[- @%file%]]" playlist'
 	let [results,playlist] = [split(system(cmd),'\n'),[]]
 	let maxLengths = {'position':[],'artist':[],'title':[]}
 
 	for item in results
 		call add(playlist, mpc#EncodeSong(item))
 	endfor
-
 	for track in playlist
 		call add(maxLengths['position'], len(track.position))
 		if(len(track) == 3)
@@ -16,7 +16,6 @@ function! mpc#GetPlaylist()
 			call add(maxLengths['title'],    len(track.title))
 		endif
 	endfor
-
 	call sort(maxLengths.position,"LargestNumber")
 	call sort(maxLengths.artist,"LargestNumber")
 	call sort(maxLengths.title,"LargestNumber")
@@ -28,15 +27,13 @@ function! mpc#GetPlaylist()
 						\ . track.position
 		endif
 		let track.position.= ' '
-		echom track.position
 		if(len(track) == 3)
-			let track.artist  .= repeat(' ', maxLengths['artist'][-1] + 2 - len(artist))
-			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(title))
+			let track.artist  .= repeat(' ', maxLengths['artist'][-1] + 2 - len(track.artist))
+			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(track.title))
 		elseif(len(track) == 2)
-			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(title))
+			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(track.title))
 		endif
 	endfor
-
 	return playlist
 endfunction
 
@@ -47,9 +44,15 @@ endfunction
 function! mpc#DisplayPlaylist()
 	let playlist = mpc#GetPlaylist()
 	for track in playlist
-		let output = track.position . " "
-					\ . track.artist
-					\ . track.title
+		if(len(track) == 3)
+			let output = track.position . " "
+						\ . track.artist
+						\ . track.title
+		elseif(len(track) == 2)
+			let output = track.position . " "
+						\ . track.title
+		endif
+
 		if(playlist[0].position == track.position)
 			execute "normal! 1GdGI" . output
 		else
@@ -72,11 +75,9 @@ function! mpc#EncodeSong(item)
 		let song = {'position': item[0],
 					\		'artist' : '@ar' . item[1]. 'ar@',
 					\		'title': '@ti' . item[2] . 'ti@' }
-		" echom song.artist
 	elseif(len(item) == 2)
 		let song = {'position': item[0],
-					\		'title': '@ti' . item[1] . 'ti@' }
-		" echom song.title
+					\		'title': '@ar' . item[1] . 'ar@' } "using ar eventhough its a title to avoid getting the wrong color in the playlist window
 	endif
 	return song
 endfunction
@@ -87,4 +88,30 @@ function! mpc#DecodeSong(item)
 				\		'artist' : line_items[1][2:-4],
 				\		'title' : line_items[2][2:-4]}
 	return song
+endfunction
+
+function! mpc#TogglePlayback()
+	let command = "mpc toggle"
+	let result = split(system(command), '\n')[1]
+	let message = '[mpc]'
+	let message .= split(result, " ")[0] == "[paused]" ? " PAUSED" : " PLAYING"
+	echomsg message
+endfunction
+
+function! mpc#ToggleRandom()
+  let command = 'mpc random'
+  let result = split(system(command), '\n')
+  let status = len(result) == 3 ? result[2] : result[0]
+  let message = split(status, '   ')[2] == 'random: off'
+        \ ? '[mpc] RANDOM: OFF' : '[mpc] RANDOM: ON'
+  echomsg message
+endfunction
+ 	
+function! mpc#ToggleRepeat()
+  let command = 'mpc repeat'
+  let result = split(system(command), '\n')
+  let status = len(result) == 3 ? result[2] : result[0]
+  let message = split(status, '   ')[1] == 'repeat: off'
+        \ ? '[mpc] REPEAT: OFF' : '[mpc] REPEAT: ON'
+  echomsg message
 endfunction

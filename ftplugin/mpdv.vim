@@ -19,3 +19,18 @@ set buftype=nofile
 setlocal conceallevel=3
 setlocal concealcursor=nvic
 
+command! -buffer PlaySelectedSong call mpc#PlaySong(line("."))
+
+nnoremap <silent>          <plug>MpcTogglePlayback :TogglePlayback<cr>
+nnoremap <silent>          <plug>MpcBrowse         :MpcBrowser<cr>
+nnoremap <silent> <buffer> <c-x> :PlaySelectedSong<cr>
+nnoremap <silent> <buffer> <c-a> :ToggleRandom<cr>
+nnoremap <silent> <buffer> <c-e> :ToggleRepeat<cr>
+
+" if !hasmapto("<plug>MpcTogglePlayback")
+" 	nmap <Leader>p <plug>MpcTogglePlayback
+" endif
+
+if !hasmapto("<plug>MpcBrowse")
+	nmap <Leader>p <plug>MpcBrowse
+endif

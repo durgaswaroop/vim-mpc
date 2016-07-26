@@ -24,3 +24,8 @@ function! OpenMPC()
 	endif
 	call mpc#DisplayPlaylist()
 endfunction
+
+command! MpcBrowser     call OpenMPC()
+command! TogglePlayback call mpc#TogglePlayback()
+command! ToggleRandom   call mpc#ToggleRandom()
+command! ToggleRepeat   call mpc#ToggleRepeat()
