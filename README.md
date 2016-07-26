@@ -5,7 +5,7 @@ Vim Plugin for MPC Player
 
 This is how it looks when you open the Playlist Window
 
-![vim-mpc playlist image](PlaylistWindow.png)
+![vim-mpc playlist image](https://github.com/durgaswaroop/vim-mpc/blob/master/PlaylistWindow.PNG)
 
 ## Built-in commands for various actions.
 * `:MpcBrowser`     - Opens the playlist in a split window with Colors for Artist and Title
