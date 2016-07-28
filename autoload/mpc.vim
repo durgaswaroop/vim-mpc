@@ -1,3 +1,7 @@
+" Name: autoload/mpc.vim
+" Maintainer: Swaroop (https://github.com/durgaswaroop)
+" Github URL: https://github.com/durgaswaroop/vim-mpc
+
 function! mpc#GetPlaylist()
 	let cmd = 'mpc --format "%position% [ @%artist%] [[ @%title%]|[ @%file%]]" playlist'
 	" let cmd = 'mpc --format "%position% [- @%artist%] [[- @%title%]|[- @%file%]]" playlist'
@@ -63,10 +67,15 @@ endfunction
 
 function! mpc#PlaySong(num)
 	let song = split(getline(a:num)," ")
-	let results = split(system('mpc --format "%position% [- %artist%] [[- %title%]|[- %file%]]" play ' . song[0]), "\n")
-	let message = '[mpc] NOW PLAYING: ' . results[0]
+	let results = split(system('mpc --format "[ %artist%] [[- %title%]|[- %file%]]" play ' . song[0]), "\n")
+	let message = '[mpc] NOW PLAYING: ' . ' ♫' . results[0] . ' ♫'
 	" set statusline+=%{results[0]}
+	" highlight MpcHl ctermfg=
+	" highlight default mpcEchoMsg cterm=bold gui=bold ctermfg=lightblue guifg=#5fd7ff 
+	highlight default mpcEchoMsg cterm=bold gui=bold guifg=#7d0552
+	echohl mpcEchoMsg
 	echomsg message
+	echohl normal
 endfunction
 
 function! mpc#EncodeSong(item)
@@ -99,19 +108,19 @@ function! mpc#TogglePlayback()
 endfunction
 
 function! mpc#ToggleRandom()
-  let command = 'mpc random'
-  let result = split(system(command), '\n')
-  let status = len(result) == 3 ? result[2] : result[0]
-  let message = split(status, '   ')[2] == 'random: off'
-        \ ? '[mpc] RANDOM: OFF' : '[mpc] RANDOM: ON'
-  echomsg message
+	let command = 'mpc random'
+	let result = split(system(command), '\n')
+	let status = len(result) == 3 ? result[2] : result[0]
+	let message = split(status, '   ')[2] == 'random: off'
+				\ ? '[mpc] RANDOM: OFF' : '[mpc] RANDOM: ON'
+	echomsg message
 endfunction
- 	
+
 function! mpc#ToggleRepeat()
-  let command = 'mpc repeat'
-  let result = split(system(command), '\n')
-  let status = len(result) == 3 ? result[2] : result[0]
-  let message = split(status, '   ')[1] == 'repeat: off'
-        \ ? '[mpc] REPEAT: OFF' : '[mpc] REPEAT: ON'
-  echomsg message
+	let command = 'mpc repeat'
+	let result = split(system(command), '\n')
+	let status = len(result) == 3 ? result[2] : result[0]
+	let message = split(status, '   ')[1] == 'repeat: off'
+				\ ? '[mpc] REPEAT: OFF' : '[mpc] REPEAT: ON'
+	echomsg message
 endfunction

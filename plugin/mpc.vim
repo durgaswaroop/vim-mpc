@@ -1,3 +1,7 @@
+" Name: plugin/mpc.vim
+" Maintainer: Swaroop (https://github.com/durgaswaroop)
+" Github URL: https://github.com/durgaswaroop/vim-mpc
+
 " function! OpenMPC()"{{{
 " 	let cmd = 'mpc --format \"[[%title%]|[%file%]] - %artist%" current'
 " 	echomsg system(cmd)[:-2]
