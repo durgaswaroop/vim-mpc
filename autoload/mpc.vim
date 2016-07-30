@@ -65,17 +65,19 @@ function! mpc#DisplayPlaylist()
 	endfor
 endfunction
 
+function! mpc#ColorizeEchoMsg(msg)
+	highlight default mpcEchoMsg cterm=bold gui=bold guifg=#5fd7ff ctermfg=lightblue
+	echohl mpcEchoMsg
+	echom a:msg
+	echohl normal
+endfunction
+
 function! mpc#PlaySong(num)
 	let song = split(getline(a:num)," ")
 	let results = split(system('mpc --format "[ %artist%] [[- %title%]|[- %file%]]" play ' . song[0]), "\n")
 	let message = '[mpc] NOW PLAYING: ' . ' ♫' . results[0] . ' ♫'
 	" set statusline+=%{results[0]}
-	" highlight MpcHl ctermfg=
-	" highlight default mpcEchoMsg cterm=bold gui=bold ctermfg=lightblue guifg=#5fd7ff 
-	highlight default mpcEchoMsg cterm=bold gui=bold guifg=#7d0552
-	echohl mpcEchoMsg
-	echomsg message
-	echohl normal
+	call mpc#ColorizeEchoMsg(message)
 endfunction
 
 function! mpc#EncodeSong(item)
@@ -104,7 +106,7 @@ function! mpc#TogglePlayback()
 	let result = split(system(command), '\n')[1]
 	let message = '[mpc]'
 	let message .= split(result, " ")[0] == "[paused]" ? " PAUSED" : " PLAYING"
-	echomsg message
+	call mpc#ColorizeEchoMsg(message)
 endfunction
 
 function! mpc#ToggleRandom()
@@ -113,7 +115,7 @@ function! mpc#ToggleRandom()
 	let status = len(result) == 3 ? result[2] : result[0]
 	let message = split(status, '   ')[2] == 'random: off'
 				\ ? '[mpc] RANDOM: OFF' : '[mpc] RANDOM: ON'
-	echomsg message
+	call mpc#ColorizeEchoMsg(message)
 endfunction
 
 function! mpc#ToggleRepeat()
@@ -122,5 +124,5 @@ function! mpc#ToggleRepeat()
 	let status = len(result) == 3 ? result[2] : result[0]
 	let message = split(status, '   ')[1] == 'repeat: off'
 				\ ? '[mpc] REPEAT: OFF' : '[mpc] REPEAT: ON'
-	echomsg message
+	call mpc#ColorizeEchoMsg(message)
 endfunction
