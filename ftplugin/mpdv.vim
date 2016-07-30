@@ -24,6 +24,8 @@ setlocal conceallevel=3
 setlocal concealcursor=nvic
 
 command! -buffer PlaySelectedSong call mpc#PlaySong(line("."))
+command!         IncreaseVolume   call mpc#IncreaseVolume()
+command!         DecreaseVolume   call mpc#DecreaseVolume()
 
 nnoremap <silent>          <plug>MpcTogglePlayback :TogglePlayback<cr>
 nnoremap <silent>          <plug>MpcBrowse         :MpcBrowser<cr>

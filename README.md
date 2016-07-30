@@ -40,8 +40,16 @@ Once installed, you can use the following commands
 
 * `:ToggleRepeat`   - Repeat On or Off
 
+* `:IncreaseVolume`  - Increase Volume by 5%
+
+* `:DecreaseVolume`  - Decrease Volume by 5%
+
+* `:PlayNext` - Plays the next song in the Playlist
+
+* `:PlayPrev` - Plays the previous song in the Playlist
+
 ## Default Keymaps
-* `<Leader>p` - Mapped to `:MpcBrowse`. So, you can use that. 
+* `<Leader>p` - Mapped to `:MpcBrowse`. You can change it if you wish. Look at Customizing below
 
 * `Ctrl + x` - Plays the selected song in the Playlist window
 

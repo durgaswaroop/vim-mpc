@@ -3,8 +3,7 @@
 " Github URL: https://github.com/durgaswaroop/vim-mpc
 
 function! mpc#GetPlaylist()
-	let cmd = 'mpc --format "%position% [ @%artist%] [[ @%title%]|[ @%file%]]" playlist'
-	" let cmd = 'mpc --format "%position% [- @%artist%] [[- @%title%]|[- @%file%]]" playlist'
+	let cmd = 'mpc --format "%position% [ @%artist%] [[ @%title%]|[ @%file%]]" playlist'"
 	let [results,playlist] = [split(system(cmd),'\n'),[]]
 	let maxLengths = {'position':[],'artist':[],'title':[]}
 
@@ -38,7 +37,7 @@ function! mpc#GetPlaylist()
 			let track.title   .= repeat(' ', maxLengths['title'][-1]  + 2 - len(track.title))
 		endif
 	endfor
-	return playlist
+	return playlist"
 endfunction
 
 function! LargestNumber(n1,n2)
@@ -46,7 +45,7 @@ function! LargestNumber(n1,n2)
 endfunction
 
 function! mpc#DisplayPlaylist()
-	let playlist = mpc#GetPlaylist()
+	let playlist = mpc#GetPlaylist()"
 	for track in playlist
 		if(len(track) == 3)
 			let output = track.position . " "
@@ -62,26 +61,66 @@ function! mpc#DisplayPlaylist()
 		else
 			call append(line('$'), output)
 		endif
-	endfor
+	endfor"
 endfunction
 
 function! mpc#ColorizeEchoMsg(msg)
-	highlight default mpcEchoMsg cterm=bold gui=bold guifg=#5fd7ff ctermfg=lightblue
+	highlight default mpcEchoMsg cterm=bold gui=bold guifg=#5fd7ff ctermfg=lightblue"
 	echohl mpcEchoMsg
 	echom a:msg
-	echohl normal
+	echohl normal"
+endfunction
+
+function! mpc#IncreaseVolume() "Increases volume by 5% everytime its called
+	let results  = split(system('mpc volume +5'), "\n")"
+	let message = '[mpc] '
+	if(len(l:results) == 3)
+		let volumeLine = l:results[2]
+	elseif(len(l:results) == 1)
+		let volumeLine = l:results[0]
+	endif
+	let volumeLineSplits = split(l:volumeLine, " ")
+	let currentVolume = l:volumeLineSplits[0] . l:volumeLineSplits[1]
+	let message .= toupper(l:currentVolume)
+	call mpc#ColorizeEchoMsg(message)"
+endfunction
+
+function! mpc#DecreaseVolume() "Decreases volume by 5% everytime its called
+	let results  = split(system('mpc volume -5'), "\n")"
+	let message = '[mpc] '
+	if(len(l:results) == 3)
+		let volumeLine = l:results[2]
+	elseif(len(l:results) == 1)
+		let volumeLine = l:results[0]
+	endif
+	let volumeLineSplits = split(l:volumeLine, " ")
+	let currentVolume = l:volumeLineSplits[0] . l:volumeLineSplits[1]
+	let message .= toupper(l:currentVolume)
+	call mpc#ColorizeEchoMsg(message)"
+endfunction
+
+function! mpc#PlayNextSong()
+let results = split(system('mpc --format "[ %artist%] [[- %title%]|[- %file%]]" next '), '\n')
+let message = '[mpc] NOW PLAYING: ' . ' ♫' . results[0] . ' ♫'
+call mpc#ColorizeEchoMsg(message)
+endfunction
+
+function! mpc#PlayPreviousSong()
+let results = split(system('mpc --format "[ %artist%] [[- %title%]|[- %file%]]" prev '), '\n')
+let message = '[mpc] NOW PLAYING: ' . ' ♫' . results[0] . ' ♫'
+call mpc#ColorizeEchoMsg(message)
 endfunction
 
 function! mpc#PlaySong(num)
-	let song = split(getline(a:num)," ")
+	let song = split(getline(a:num)," ")"
 	let results = split(system('mpc --format "[ %artist%] [[- %title%]|[- %file%]]" play ' . song[0]), "\n")
 	let message = '[mpc] NOW PLAYING: ' . ' ♫' . results[0] . ' ♫'
-	" set statusline+=%{results[0]}
-	call mpc#ColorizeEchoMsg(message)
+	"TODO: Setting statusline from here if possible
+	call mpc#ColorizeEchoMsg(message)"
 endfunction
 
 function! mpc#EncodeSong(item)
-	let item = split(a:item, " @")
+	let item = split(a:item, " @")"
 	if(len(item) == 3)
 		let song = {'position': item[0],
 					\		'artist' : '@ar' . item[1]. 'ar@',
@@ -90,39 +129,46 @@ function! mpc#EncodeSong(item)
 		let song = {'position': item[0],
 					\		'title': '@ar' . item[1] . 'ar@' } "using ar eventhough its a title to avoid getting the wrong color in the playlist window
 	endif
-	return song
+	return song"
 endfunction
 
 function! mpc#DecodeSong(item)
-	let line_items = split(substitute(a:item, ' \{2,}', ' ','g'), ' @')
+	let line_items = split(substitute(a:item, ' \{2,}', ' ','g'), ' @')"
 	let song = {'position': line_items[0],
 				\		'artist' : line_items[1][2:-4],
 				\		'title' : line_items[2][2:-4]}
-	return song
+	return song"
 endfunction
 
 function! mpc#TogglePlayback()
-	let command = "mpc toggle"
-	let result = split(system(command), '\n')[1]
+	let command = "mpc toggle""
+	let returnBack = split(system(command), '\n')
+	let currentSong = returnBack[0]
+	let result = returnBack[1]
 	let message = '[mpc]'
-	let message .= split(result, " ")[0] == "[paused]" ? " PAUSED" : " PLAYING"
-	call mpc#ColorizeEchoMsg(message)
+	let pausePlayFlag = split(result, " ")[0] == "[paused]" ? 1 : 0
+	if(pausePlayFlag == 1)
+		let message .= " PAUSED"
+	else
+		let message .= " PLAYING : " . '♫ ' . l:currentSong . ' ♫' 
+	endif
+	call mpc#ColorizeEchoMsg(message)"
 endfunction
 
 function! mpc#ToggleRandom()
-	let command = 'mpc random'
+	let command = 'mpc random'"
 	let result = split(system(command), '\n')
 	let status = len(result) == 3 ? result[2] : result[0]
 	let message = split(status, '   ')[2] == 'random: off'
 				\ ? '[mpc] RANDOM: OFF' : '[mpc] RANDOM: ON'
-	call mpc#ColorizeEchoMsg(message)
+	call mpc#ColorizeEchoMsg(message)"
 endfunction
 
 function! mpc#ToggleRepeat()
-	let command = 'mpc repeat'
+	let command = 'mpc repeat'"
 	let result = split(system(command), '\n')
 	let status = len(result) == 3 ? result[2] : result[0]
 	let message = split(status, '   ')[1] == 'repeat: off'
 				\ ? '[mpc] REPEAT: OFF' : '[mpc] REPEAT: ON'
-	call mpc#ColorizeEchoMsg(message)
+	call mpc#ColorizeEchoMsg(message)"
 endfunction
