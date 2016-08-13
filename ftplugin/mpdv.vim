@@ -32,6 +32,9 @@ nnoremap <silent>          <plug>MpcBrowse         :MpcBrowser<cr>
 nnoremap <silent> <buffer> <c-x> :PlaySelectedSong<cr>
 nnoremap <silent> <buffer> <c-a> :ToggleRandom<cr>
 nnoremap <silent> <buffer> <c-e> :ToggleRepeat<cr>
+nnoremap <silent> <buffer> >> :IncreaseVolume<cr>
+nnoremap <silent> <buffer> << :DecreaseVolume<cr>
+
 
 " if !hasmapto("<plug>MpcTogglePlayback")
 " 	nmap <Leader>p <plug>MpcTogglePlayback
