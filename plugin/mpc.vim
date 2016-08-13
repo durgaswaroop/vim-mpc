@@ -29,16 +29,11 @@ function! OpenMPC()
 	call mpc#DisplayPlaylist()
 endfunction
 
-command! MpcBrowser     call OpenMPC()
-command! TogglePlayback call mpc#TogglePlayback()
-command! ToggleRandom   call mpc#ToggleRandom()
-command! ToggleRepeat   call mpc#ToggleRepeat()
-command! IncreaseVolume call mpc#IncreaseVolume()
-command! DecreaseVolume call mpc#DecreaseVolume()
-command! PlayNext       call mpc#PlayNextSong()
-command! PlayPrev       call mpc#PlayPreviousSong()
-
-nnoremap <silent> <plug>IncreaseVolume :IncreaseVolume<cr>
-nnoremap <silent> <plug>DecreaseVolume :DecreaseVolume<cr>
-nnoremap <silent> <plug>PlayNext       :PlayNext<cr>
-nnoremap <silent> <plug>PlayPrev       :PlayPrev<cr>
+command! MpcPlaylistBrowser call OpenMPC()
+command! MpcTogglePlayback  call mpc#TogglePlayback()
+command! MpcToggleRandom    call mpc#ToggleRandom()
+command! MpcToggleRepeat    call mpc#ToggleRepeat()
+command! MpcIncreaseVolume  call mpc#IncreaseVolume()
+command! MpcDecreaseVolume  call mpc#DecreaseVolume()
+command! MpcPlayNext        call mpc#PlayNextSong()
+command! MpcPlayPrev        call mpc#PlayPreviousSong()

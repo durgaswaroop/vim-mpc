@@ -28,43 +28,26 @@ cd ~/.vim/bundle # For linux
 
 git clone https://github.com/durgaswaroop/vim-mpc.git
 ```
-
-## Built-in commands for various actions.
+## Default Keymaps & Commands
 Once installed, you can use the following commands
 
-* `:MpcBrowser`     - Opens the playlist in a split window with Colors for Artist and Title
+* `Ctrl + x`    - Plays the selected song in the Playlist window
 
-* `:TogglePlayback` - Play/Stop the track
+* `Ctrl + a`    - R**a**ndom On or Off in the Playlist Window
 
-* `:ToggleRandom`   - Random On or Off
-
-* `:ToggleRepeat`   - Repeat On or Off
-
-* `:IncreaseVolume`  - Increase Volume by 5%
-
-* `:DecreaseVolume`  - Decrease Volume by 5%
-
-* `:PlayNext` - Plays the next song in the Playlist
-
-* `:PlayPrev` - Plays the previous song in the Playlist
-
-## Default Keymaps
-* `<Leader>p` - Mapped to `:MpcBrowse`. You can change it if you wish. Look at Customizing below
-
-* `Ctrl + x` - Plays the selected song in the Playlist window
-
-* `Ctrl + a` - Random On or Off in the Playlist Window
-
-* `Ctrl + e` - Repeat On or Off in the Playlist Window
+* `Ctrl + e`    - R**e**peat On or Off in the Playlist Window
 
 ## Customizing
-You can map your own key to get the playlist window as follows
+You can map your own key bindings for various tasks using the *<plug>* mappings that are available as follows:
 
-To map it to `Ctrl + p`, add this to your vimrc file
+* :MpcPlaylistBrowser
+* :MpcTogglePlayback
+* :MpcIncreaseVolume
+* :MpcDecreaseVolume
+* :MpcPlayNext
+* :MpcPlayPrev
 
-```
-nnoremap <C-p> <plug>MpcBrowse
-```
+They are named appropriately and so they will do what their name suggests they will.
 
 ## Attribution
 This plugin is possible because of the book [VimL Primer](https://pragprog.com/book/bkviml/the-viml-primer) from **The Pragmatic Bookshelf**. Its a must read for anyone looking to learn Vim scripting. 

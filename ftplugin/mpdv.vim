@@ -23,22 +23,40 @@ set buftype=nofile
 setlocal conceallevel=3
 setlocal concealcursor=nvic
 
-command! -buffer PlaySelectedSong call mpc#PlaySong(line("."))
-command!         IncreaseVolume   call mpc#IncreaseVolume()
-command!         DecreaseVolume   call mpc#DecreaseVolume()
+command! -buffer MpcPlaySelectedSong call mpc#PlaySong(line("."))
 
-nnoremap <silent>          <plug>MpcTogglePlayback :TogglePlayback<cr>
-nnoremap <silent>          <plug>MpcBrowse         :MpcBrowser<cr>
-nnoremap <silent> <buffer> <c-x> :PlaySelectedSong<cr>
-nnoremap <silent> <buffer> <c-a> :ToggleRandom<cr>
-nnoremap <silent> <buffer> <c-e> :ToggleRepeat<cr>
-nnoremap <silent> <buffer> >> :IncreaseVolume<cr>
-nnoremap <silent> <buffer> << :DecreaseVolume<cr>
+" nnoremap <silent>          <plug>MpcBrowse         :MpcBrowser<cr>
+" nnoremap <silent>          <plug>MpcTogglePlayback :TogglePlayback<cr>
+" nnoremap <silent>          <plug>MpcIncreaseVolume :IncreaseVolume<cr>
+" nnoremap <silent>          <plug>MpcDecreaseVolume :DecreaseVolume<cr>
+" nnoremap <silent>          <plug>MpcPlayNext       :PlayNext<cr>
+" nnoremap <silent>          <plug>MpcPlayPrev       :PlayPrev<cr>
+nnoremap <silent> <buffer> <c-x> :MpcPlaySelectedSong<cr>
+nnoremap <silent> <buffer> <c-a> :MpcToggleRandom<cr>
+nnoremap <silent> <buffer> <c-e> :MpcToggleRepeat<cr>
 
-" if !hasmapto("<plug>MpcTogglePlayback")
-" 	nmap <Leader>p <plug>MpcTogglePlayback
+" if !hasmapto("<plug>MpcBrowse")
+" 	nmap <Leader>p <plug>MpcBrowse
+" 	" vmap <Leader>p <plug>MpcBrowse
 " endif
 
-if !hasmapto("<plug>MpcBrowse")
-	nmap <Leader>p <plug>MpcBrowse
-endif
+" if !hasmapto("<plug>MpcTogglePlayback")
+" 	nmap <C-space> <plug>MpcTogglePlayback
+" 	vmap <C-space> <plug>MpcTogglePlayback
+" endif
+
+" if !hasmapto("<plug>MpcIncreaseVolume")
+" 	nmap <C-PageUp> <plug>MpcIncreaseVolume
+" endif
+
+" if !hasmapto("<plug>MpcDecreaseVolume")
+" 	nmap <C-PageDown> <plug>MpcDecreaseVolume
+" endif
+
+" if !hasmapto("<plug>MpcPlayNext")
+" 	nmap <Leader>] <plug>MpcPlayNext
+" endif
+
+" if !hasmapto("<plug>MpcPlayPrev")
+" 	nmap <Leader>[ <plug>MpcPlayPrev
+" endif
